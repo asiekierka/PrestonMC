@@ -13,7 +13,7 @@ buildscript {
 apply plugin: 'net.minecraftforge.gradle.forge'
 apply plugin: 'net.minecrell.licenser'
 
-version = "0.1.0"
+version = "0.2.0"
 group = "pl.asie.preston" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "Preston"
 
@@ -32,7 +32,15 @@ minecraft {
     replace '@MC_VERSION@', version
 }
 
+repositories {
+    maven {
+        name 'DVS1 Maven FS'
+        url 'http://dvs1.progwml6.com/files/maven'
+    }
+}
+
 dependencies {
+    deobfCompile "mezz.jei:jei_1.12.2:4.8.5.138"
 }
 
 license {

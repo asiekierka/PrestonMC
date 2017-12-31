@@ -29,6 +29,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 import java.math.BigInteger;
+import java.util.Collections;
+import java.util.List;
 
 public interface ICompressorRecipe {
 	boolean matchesType(ItemStack stack);
@@ -47,5 +49,11 @@ public interface ICompressorRecipe {
 
 	default boolean canMerge(ItemStack one, ItemStack two) {
 		return ItemHandlerHelper.canItemStacksStack(one, two);
+	}
+
+	boolean matchesOutput(ItemStack stack);
+	List<ItemStack> getInputsForOutput(ItemStack output);
+	default List<ItemStack> getExampleInputs() {
+		return Collections.emptyList();
 	}
 }

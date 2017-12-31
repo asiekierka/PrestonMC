@@ -64,7 +64,7 @@ public class RecipeDecompress extends IForgeRegistryEntry.Impl<IRecipe> implemen
 
 	@Override
 	public boolean canFit(int width, int height) {
-		return width >= 1 && height >= 1;
+		return (width * height) >= 1;
 	}
 
 	@Override

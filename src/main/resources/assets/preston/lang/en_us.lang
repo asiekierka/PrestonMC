@@ -999,6 +999,8 @@ preston.tuple.998=Duodemilluple
 preston.tuple.999=Undemilluple
 preston.tuple.1000=Milluple
 
+config.preston.title=Preston Configuration
+gui.preston.energy_bar=%s/%s %s
 item.preston.compressed_block.name=%s Compressed %s
 itemGroup.preston=Preston
 tile.preston.compressor.name=Compressor

@@ -23,6 +23,7 @@ import com.google.common.collect.Lists;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.translation.I18n;
 import pl.asie.preston.PrestonMod;
 import pl.asie.preston.util.GuiContainerBase;
 import pl.asie.preston.util.PrestonUtils;
@@ -30,7 +31,7 @@ import pl.asie.preston.util.PrestonUtils;
 import java.math.BigInteger;
 
 public class GuiCompressor extends GuiContainerBase {
-	private static final ResourceLocation TEXTURE = new ResourceLocation("preston:textures/gui/compressor.png");
+	public static final ResourceLocation TEXTURE = new ResourceLocation("preston:textures/gui/compressor.png");
 	private final ContainerCompressor owner;
 
 	public GuiCompressor(ContainerCompressor container) {
@@ -51,7 +52,7 @@ public class GuiCompressor extends GuiContainerBase {
 
 		if (insideRect(mouseX, mouseY, xCenter + 44 - 1, yCenter + 38 - 1, 88 + 2, 5 + 2)) {
 			this.drawHoveringText(Lists.newArrayList(
-					String.format("%s/%s %s", owner.owner.getStorage().getBigEnergyStored().toString(), owner.owner.getStorage().getCurrentMaxEnergy().toString(), PrestonMod.ENERGY_UNIT_NAME)
+					I18n.translateToLocalFormatted("gui.preston.energy_bar", owner.owner.getStorage().getBigEnergyStored().toString(), owner.owner.getStorage().getCurrentMaxEnergy().toString(), PrestonMod.ENERGY_UNIT_NAME)
 			), mouseX, mouseY, fontRenderer);
 		}
 	}

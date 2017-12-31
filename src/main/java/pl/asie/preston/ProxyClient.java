@@ -34,6 +34,7 @@ import net.minecraft.network.play.INetHandlerPlayClient;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
@@ -45,13 +46,19 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.items.ItemHandlerHelper;
 import pl.asie.preston.client.CompressedBlockBakedModel;
+import pl.asie.preston.client.CompressedBlockTintHandler;
 import pl.asie.preston.client.ResourceGenerator;
 import pl.asie.preston.client.TileRendererCompressor;
 import pl.asie.preston.container.ItemCompressedBlock;
+import pl.asie.preston.machine.CompressorRecipeCompress;
 import pl.asie.preston.machine.ContainerCompressor;
 import pl.asie.preston.machine.GuiCompressor;
 import pl.asie.preston.machine.TileCompressor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ProxyClient extends ProxyCommon {
 	private static final ModelResourceLocation CB_MRL = new ModelResourceLocation("preston:compressed_block", "normal");
@@ -121,6 +128,7 @@ public class ProxyClient extends ProxyCommon {
 	@SubscribeEvent
 	public void onTextureStitchPre(TextureStitchEvent.Pre event) {
 		if (PrestonMod.blockCompressor != null) {
+			CompressorRecipeCompress.clearCache();
 			TileRendererCompressor.pistonHead = getModelWithTextures(new ResourceLocation("preston", "block/compressor_piston_head"), event.getMap());
 		}
 	}
@@ -139,27 +147,40 @@ public class ProxyClient extends ProxyCommon {
 		event.getModelRegistry().putObject(CB_MRL, new CompressedBlockBakedModel());
 	}
 
+	@SubscribeEvent
+	public void onColorHandlerItemRegiser(ColorHandlerEvent.Item event) {
+		event.getItemColors().registerItemColorHandler(new CompressedBlockTintHandler(), PrestonMod.itemCompressedBlock);
+	}
+
 	@Override
 	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
 		EntityPlayer player = Minecraft.getMinecraft().player;
-		boolean hasAny = false;
+		List<ItemStack> stackList = new ArrayList<>();
 
 		if (player != null) {
 			for (int j = 0; j < 9; j++) {
 				ItemStack source = player.inventory.getStackInSlot(j);
 				if (!source.isEmpty() && ItemCompressedBlock.canCompress(source)) {
-					hasAny = true;
-					break;
+					ItemStack sourceChk = ItemCompressedBlock.setLevel(source, 0);
+					boolean shouldAdd = true;
+					for (int i = 0; i < stackList.size(); i++) {
+						if (ItemHandlerHelper.canItemStacksStack(stackList.get(i), sourceChk)) {
+							shouldAdd = false;
+							break;
+						}
+					}
+					if (shouldAdd) {
+						stackList.add(sourceChk);
+					}
 				}
 			}
 		}
 
-		if (!hasAny) {
+		if (stackList.isEmpty()) {
 			super.getSubItems(tab, items);
 		} else {
 			for (int i = 1; i <= PrestonMod.MAX_COMPRESSION_LEVELS; i++) {
-				for (int j = 0; j < 9; j++) {
-					ItemStack source = player.inventory.getStackInSlot(j);
+				for (ItemStack source : stackList) {
 					if (!source.isEmpty() && ItemCompressedBlock.canCompress(source)) {
 						items.add(ItemCompressedBlock.setLevel(source, i));
 					}

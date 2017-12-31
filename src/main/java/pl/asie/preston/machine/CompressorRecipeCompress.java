@@ -19,16 +19,23 @@
 
 package pl.asie.preston.machine;
 
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
+import net.minecraftforge.items.ItemStackHandler;
 import pl.asie.preston.PrestonMod;
 import pl.asie.preston.api.ICompressorRecipe;
 import pl.asie.preston.container.ItemCompressedBlock;
 import pl.asie.preston.network.PacketEmitParticlesOfHappiness;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class CompressorRecipeCompress implements ICompressorRecipe {
 	@Override
@@ -63,5 +70,44 @@ public class CompressorRecipeCompress implements ICompressorRecipe {
 			int compressedLevel = ItemCompressedBlock.getLevel(crafted);
 			PrestonMod.packet.sendToWatching(new PacketEmitParticlesOfHappiness((TileCompressor) tile, compressedLevel), tile);
 		}
+	}
+
+	@Override
+	public boolean matchesOutput(ItemStack stack) {
+		return ItemCompressedBlock.canDecompress(stack);
+	}
+
+	@Override
+	public List<ItemStack> getInputsForOutput(ItemStack output) {
+		return Collections.singletonList(ItemCompressedBlock.shiftLevel(output, -1));
+	}
+
+	private static List<ItemStack> stackListCache;
+	public static void clearCache() {
+		stackListCache = null;
+	}
+
+	@Override
+	public List<ItemStack> getExampleInputs() {
+		if (stackListCache != null) {
+			return stackListCache;
+		}
+
+		stackListCache = new ArrayList<>();
+		/* for (Item i : Item.REGISTRY) {
+			if (i instanceof ItemCompressedBlock) {
+				continue;
+			}
+
+			NonNullList<ItemStack> list = NonNullList.create();
+			i.getSubItems(CreativeTabs.SEARCH, list);
+			for (ItemStack stack : list) {
+				if (ItemCompressedBlock.canCompress(stack)) {
+					stackListCache.add(stack);
+				}
+			}
+		} */
+
+		return stackListCache;
 	}
 }

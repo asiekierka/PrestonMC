@@ -23,11 +23,12 @@ import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.world.World;
+import net.minecraftforge.common.crafting.IShapedRecipe;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 import pl.asie.preston.util.PrestonUtils;
 import pl.asie.preston.container.ItemCompressedBlock;
 
-public class RecipeCompress extends IForgeRegistryEntry.Impl<IRecipe> implements IRecipe {
+public class RecipeCompress extends IForgeRegistryEntry.Impl<IRecipe> implements IShapedRecipe {
 	@Override
 	public boolean matches(InventoryCrafting inv, World worldIn) {
 		int stackCount = 0;
@@ -38,17 +39,17 @@ public class RecipeCompress extends IForgeRegistryEntry.Impl<IRecipe> implements
 			}
 		}
 
-		if (stackCount != 9) {
+		if (stackCount != getRecipeWidth() * getRecipeHeight()) {
 			return false;
 		}
 
-		for (int yShift = 0; yShift <= inv.getHeight() - 3; yShift++) {
-			for (int xShift = 0; xShift <= inv.getWidth() - 3; xShift++) {
+		for (int yShift = 0; yShift <= inv.getHeight() - getRecipeHeight(); yShift++) {
+			for (int xShift = 0; xShift <= inv.getWidth() - getRecipeWidth(); xShift++) {
 				boolean found = true;
 				ItemStack cmpStack = null;
 
-				for (int i = 0; i < 9; i++) {
-					ItemStack stack = inv.getStackInRowAndColumn(xShift + i % 3, yShift + i / 3);
+				for (int i = 0; i < getRecipeWidth() * getRecipeHeight(); i++) {
+					ItemStack stack = inv.getStackInRowAndColumn(xShift + i % getRecipeWidth(), yShift + i / getRecipeWidth());
 					if (stack.isEmpty()) {
 						found = false;
 						break;
@@ -70,8 +71,8 @@ public class RecipeCompress extends IForgeRegistryEntry.Impl<IRecipe> implements
 
 	@Override
 	public ItemStack getCraftingResult(InventoryCrafting inv) {
-		for (int yShift = 0; yShift <= inv.getHeight() - 3; yShift++) {
-			for (int xShift = 0; xShift <= inv.getWidth() - 3; xShift++) {
+		for (int yShift = 0; yShift <= inv.getHeight() - getRecipeHeight(); yShift++) {
+			for (int xShift = 0; xShift <= inv.getWidth() - getRecipeWidth(); xShift++) {
 				ItemStack stack = inv.getStackInRowAndColumn(xShift, yShift);
 				if (!stack.isEmpty()) {
 					return ItemCompressedBlock.shiftLevel(stack, 1);
@@ -84,7 +85,7 @@ public class RecipeCompress extends IForgeRegistryEntry.Impl<IRecipe> implements
 
 	@Override
 	public boolean canFit(int width, int height) {
-		return width >= 3 && height >= 3;
+		return width >= getRecipeWidth() && height >= getRecipeHeight();
 	}
 
 	@Override
@@ -95,5 +96,15 @@ public class RecipeCompress extends IForgeRegistryEntry.Impl<IRecipe> implements
 	@Override
 	public boolean isDynamic() {
 		return true;
+	}
+
+	@Override
+	public int getRecipeWidth() {
+		return 3;
+	}
+
+	@Override
+	public int getRecipeHeight() {
+		return 3;
 	}
 }

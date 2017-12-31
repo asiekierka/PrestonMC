@@ -61,7 +61,7 @@ import pl.asie.preston.recipe.RecipeDecompress;
 import java.rmi.registry.Registry;
 import java.util.*;
 
-@Mod(modid = PrestonMod.MODID, version = PrestonMod.VERSION)
+@Mod(modid = PrestonMod.MODID, version = PrestonMod.VERSION, guiFactory = "pl.asie.preston.config.ConfigGuiFactory", dependencies = "after:forge@[14.23.1.2571,);before:jei@[4.7.10,)")
 public class PrestonMod {
     public static final String MODID = "preston";
     public static final String VERSION = "@VERSION@";
@@ -72,11 +72,14 @@ public class PrestonMod {
     public static Set<Item> whitelistedItems = Collections.newSetFromMap(new IdentityHashMap<Item, Boolean>());
     public static Set<Item> blacklistedItems = Collections.newSetFromMap(new IdentityHashMap<Item, Boolean>());
 
+    public static RecipeCompress recipeCompress;
+    public static RecipeDecompress recipeDecompress;
+
     public static Logger logger;
 
     public static String ENERGY_UNIT_NAME;
     public static int ENERGY_MULTIPLIER;
-    private static boolean ENABLE_COMPRESSION_BY_RECIPE, ENABLE_DECOMPRESSION_BY_RECIPE, ENABLE_COMPRESSOR, ENABLE_COMPRESSION_BY_COMPRESSOR, BLACKLIST_AS_WHITELIST;
+    private static boolean ENABLE_COMPRESSION_BY_RECIPE, ENABLE_DECOMPRESSION_BY_RECIPE, ENABLE_COMPRESSOR, ENABLE_COMPRESSION_BY_COMPRESSOR;
 
     @SidedProxy(clientSide = "pl.asie.preston.ProxyClient", serverSide = "pl.asie.preston.ProxyCommon", modId = MODID)
     public static ProxyCommon proxy;
@@ -89,7 +92,7 @@ public class PrestonMod {
 	@Mod.Instance(MODID)
 	public static PrestonMod instance;
 
-	private Configuration config;
+	public static Configuration config;
 
     public static final CreativeTabs CREATIVE_TAB = new CreativeTabs(MODID) {
         @Override
@@ -201,15 +204,19 @@ public class PrestonMod {
     @SubscribeEvent
     public void onRegisterRecipes(RegistryEvent.Register<IRecipe> event) {
         if (ENABLE_COMPRESSION_BY_RECIPE) {
-            RecipeCompress recipeCompress = new RecipeCompress();
+            recipeCompress = new RecipeCompress();
             recipeCompress.setRegistryName("preston:compress_block");
             event.getRegistry().register(recipeCompress);
+        } else {
+            recipeCompress = null;
         }
 
         if (ENABLE_DECOMPRESSION_BY_RECIPE) {
-            RecipeDecompress recipeDecompress = new RecipeDecompress();
+            recipeDecompress = new RecipeDecompress();
             recipeDecompress.setRegistryName("preston:decompress_block");
             event.getRegistry().register(recipeDecompress);
+        } else {
+            recipeDecompress = null;
         }
     }
 
