@@ -21,6 +21,7 @@ package pl.asie.preston.machine;
 
 import com.google.common.collect.Lists;
 import net.minecraft.inventory.Container;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import pl.asie.preston.PrestonMod;
 import pl.asie.preston.util.GuiContainerBase;
@@ -33,8 +34,15 @@ public class GuiCompressor extends GuiContainerBase {
 	private final ContainerCompressor owner;
 
 	public GuiCompressor(ContainerCompressor container) {
-		super(container, 176, 145);
+		super(container, 176, 150);
 		this.owner = container;
+	}
+
+	@Override
+	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
+		String displayName = new ItemStack(PrestonMod.blockCompressor).getDisplayName();
+		this.fontRenderer.drawString(displayName, this.xSize / 2 - this.fontRenderer.getStringWidth(displayName) / 2, 6, 4210752);
+		this.fontRenderer.drawString(owner.playerInventory.getDisplayName().getUnformattedText(), 8, this.ySize - 96 + 2, 4210752);
 	}
 
 	@Override
@@ -55,6 +63,6 @@ public class GuiCompressor extends GuiContainerBase {
 		this.mc.getTextureManager().bindTexture(TEXTURE);
 		this.drawTexturedModalRect(this.xCenter, this.yCenter, 0, 0, this.xSize, this.ySize);
 		int length = (int) Math.floor(PrestonUtils.clamp((float) owner.owner.getStorage().getFilledAmount(), 0, 1) * 88);
-		this.drawTexturedModalRect(this.xCenter + 44, this.yCenter + 38, 0, this.ySize, length, 5);
+		this.drawTexturedModalRect(this.xCenter + 44, this.yCenter + 39, 0, this.ySize, length, 5);
 	}
 }

@@ -44,7 +44,7 @@ public class CompressorRecipeCompress implements ICompressorRecipe {
 	@Override
 	public BigInteger getEnergyUsage(ItemStack stack) {
 		int targetLevel = ItemCompressedBlock.getLevel(stack) + 1;
-		BigInteger value = BigInteger.valueOf(100);
+		BigInteger value = BigInteger.valueOf(PrestonMod.ENERGY_MULTIPLIER);
 		for (int j = 2; j <= targetLevel; j++) {
 			value = value.multiply(BigInteger.valueOf(j));
 		}

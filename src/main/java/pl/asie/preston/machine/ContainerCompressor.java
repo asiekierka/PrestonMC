@@ -33,9 +33,9 @@ public class ContainerCompressor extends ContainerBase {
 		this.worldTimeStart = owner.getWorld().getTotalWorldTime();
 
 		for (int i = 0; i < 9; i++) {
-			addSlotToContainer(new SlotItemHandler(this.owner.getStackHandler(), i, 8 + i*18, 17));
+			addSlotToContainer(new SlotItemHandler(this.owner.getStackHandler(), i, 8 + i*18, 18));
 		}
-		addSlotToContainer(new SlotItemHandler(this.owner.getStackHandler(), 9, 8 + 8*18, 40));
-		bindPlayerInventory(inventoryPlayer, 8, 63);
+		addSlotToContainer(new SlotItemHandler(this.owner.getStackHandler(), 9, 8 + 8*18, 41));
+		bindPlayerInventory(inventoryPlayer, 8, 68);
 	}
 }

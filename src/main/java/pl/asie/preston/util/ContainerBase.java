@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 public abstract class ContainerBase extends Container {
+	public final InventoryPlayer playerInventory;
 	protected final Collection<Slot> SLOTS_PLAYER = new ArrayList<>(36);
 	protected final Collection<Slot> SLOTS_INVENTORY = new ArrayList<>();
 	private final IContainerHandler containerHandler;
@@ -39,6 +40,7 @@ public abstract class ContainerBase extends Container {
 
 	public ContainerBase(InventoryPlayer inventoryPlayer, IContainerHandler listener) {
 		this.containerHandler = listener;
+		this.playerInventory = inventoryPlayer;
 		if (listener != null) {
 			listener.onOpenedBy(inventoryPlayer.player);
 		}

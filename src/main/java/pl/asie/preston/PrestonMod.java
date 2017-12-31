@@ -75,6 +75,7 @@ public class PrestonMod {
     public static Logger logger;
 
     public static String ENERGY_UNIT_NAME;
+    public static int ENERGY_MULTIPLIER;
     private static boolean ENABLE_COMPRESSION_BY_RECIPE, ENABLE_DECOMPRESSION_BY_RECIPE, ENABLE_COMPRESSOR, ENABLE_COMPRESSION_BY_COMPRESSOR, BLACKLIST_AS_WHITELIST;
 
     @SidedProxy(clientSide = "pl.asie.preston.ProxyClient", serverSide = "pl.asie.preston.ProxyCommon", modId = MODID)
@@ -137,6 +138,7 @@ public class PrestonMod {
         ENABLE_COMPRESSION_BY_COMPRESSOR = config.getBoolean("enableCompressionByCompressor", "balance", true, "Whether block compression by the Compressor machine should be enabled.");
         ENABLE_COMPRESSION_BY_RECIPE = config.getBoolean("enableCompressionByRecipe", "balance", false, "Whether block compression by recipe should be enabled.");
         ENABLE_DECOMPRESSION_BY_RECIPE = config.getBoolean("enableDecompressionByRecipe", "balance", true, "Whether block decompression by recipe should be enabled.");
+        ENERGY_MULTIPLIER = config.getInt("compressorBlockCompressionEnergyMultiplier", "balance", 100, 20, Integer.MAX_VALUE, "The energy multiplier for block compression in the compressor.");
 
         if (config.hasChanged()) {
             config.save();
@@ -217,7 +219,7 @@ public class PrestonMod {
             Container c = event.player.openContainer;
             if (c instanceof ContainerCompressor) {
                 long v = event.player.getEntityWorld().getTotalWorldTime() - ((ContainerCompressor) c).worldTimeStart;
-                if (v % 4 == 0) {
+                if ((v & 1) == 0) {
                     packet.sendTo(new PacketSyncBatteryValue(((ContainerCompressor) c).owner), event.player);
                 }
             }
