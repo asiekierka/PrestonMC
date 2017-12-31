@@ -1,0 +1,29 @@
+{
+  "parent": "block/block",
+  "elements": [
+    { "from": [ 2, 7, 2 ],
+      "to": [ 14, 8.5, 14 ],
+      "faces": {
+        "down":  { "uv": [0, 0, 15, 16], "texture": "#head" },
+        "up":  { "uv": [0, 0, 16, 16], "texture": "#head" },
+        "north": { "uv": [0, 14, 16, 16], "texture": "#head" },
+        "south": { "uv": [0, 14, 16, 16], "texture": "#head" },
+        "west":  { "uv": [0, 14, 16, 16], "texture": "#head" },
+        "east":  { "uv": [0, 14, 16, 16], "texture": "#head" }
+      }
+    },
+    { "from": [ 7, 8, 7 ],
+      "to": [ 9, 12, 9 ],
+      "faces": {
+        "north": { "texture": "#rod" },
+        "south": { "texture": "#rod" },
+        "west":  { "texture": "#rod" },
+        "east":  { "texture": "#rod" }
+      }
+    }
+  ],
+  "textures": {
+    "head": "minecraft:blocks/piston_top_normal",
+    "rod": "minecraft:blocks/planks_oak"
+  }
+}

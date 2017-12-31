@@ -1,0 +1,74 @@
+{
+  "parent": "block/block",
+  "elements": [
+    { "from": [ 0, 0, 0 ],
+      "to": [ 16, 16, 16 ],
+      "faces": {
+        "down":  { "texture": "#plate", "cullface": "down" },
+        "up":    { "texture": "#vent", "cullface": "up" },
+        "north": { "texture": "#front", "cullface": "north" },
+        "south": { "texture": "#plate", "cullface": "south" },
+        "west":  { "texture": "#plate", "cullface": "west" },
+        "east":  { "texture": "#plate", "cullface": "east" }
+      }
+    },
+    { "from": [ 14, 12, 14 ],
+      "to": [ 2, 7, 0 ],
+      "faces": {
+        "north": { "texture": "#stone" },
+        "west":  { "texture": "#stone" },
+        "east":  { "texture": "#stone" },
+        "down":  { "texture": "#stone" },
+        "up":  { "texture": "#iron" }
+      }
+    },
+    {
+      "from": [ 1, 7, 0 ],
+      "to": [ 4, 12, 1 ],
+      "faces": {
+        "east":  { "texture": "#inner" },
+        "south":  { "texture": "#inner" }
+      }
+    },
+    {
+      "from": [ 12, 7, 0 ],
+      "to": [ 15, 12, 1 ],
+      "faces": {
+        "west":  { "texture": "#inner" },
+        "south":  { "texture": "#inner" }
+      }
+    },
+    {
+      "from": [ 1, 7, 0 ],
+      "to": [ 15, 8, 1 ],
+      "faces": {
+        "up":  { "texture": "#inner" },
+        "south":  { "texture": "#inner" }
+      }
+    },
+    {
+      "from": [ 1, 11, 0 ],
+      "to": [ 15, 12, 1 ],
+      "faces": {
+        "up":  { "texture": "#inner" },
+        "south":  { "texture": "#inner" }
+      }
+    }
+  ],
+  "display": {
+    "firstperson_righthand": {
+      "rotation": [ 0, 135, 0 ],
+      "translation": [ 0, 0, 0 ],
+      "scale": [ 0.40, 0.40, 0.40 ]
+    }
+  },
+  "textures": {
+    "particle": "preston:blocks/plate",
+    "vent": "preston:blocks/vent",
+    "plate": "preston:blocks/plate",
+    "front": "preston:blocks/compressor_front",
+    "stone": "minecraft:blocks/stone",
+    "iron": "minecraft:blocks/iron_block",
+    "inner": "preston:blocks/compressor_inner"
+  }
+}

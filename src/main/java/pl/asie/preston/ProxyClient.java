@@ -19,35 +19,117 @@
 
 package pl.asie.preston;
 
+import com.google.common.util.concurrent.ListenableFuture;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemMeshDefinition;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.INetHandler;
+import net.minecraft.network.login.INetHandlerLoginClient;
+import net.minecraft.network.play.INetHandlerPlayClient;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.World;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
+import net.minecraftforge.client.event.TextureStitchEvent;
+import net.minecraftforge.client.model.IModel;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
+import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
 import pl.asie.preston.client.CompressedBlockBakedModel;
 import pl.asie.preston.client.ResourceGenerator;
+import pl.asie.preston.client.TileRendererCompressor;
 import pl.asie.preston.container.ItemCompressedBlock;
+import pl.asie.preston.machine.ContainerCompressor;
+import pl.asie.preston.machine.GuiCompressor;
+import pl.asie.preston.machine.TileCompressor;
 
 public class ProxyClient extends ProxyCommon {
 	private static final ModelResourceLocation CB_MRL = new ModelResourceLocation("preston:compressed_block", "normal");
 
 	public void preInit() {
 		super.preInit();
+		GuiHandlerPreston.INSTANCE.register(GuiHandlerPreston.COMPRESSOR, Side.CLIENT, (a) -> new GuiCompressor((ContainerCompressor) a.getContainer()));
 		MinecraftForge.EVENT_BUS.register(this);
 		MinecraftForge.EVENT_BUS.register(new ResourceGenerator());
 	}
 
+	public void init() {
+		super.init();
+		ClientRegistry.bindTileEntitySpecialRenderer(TileCompressor.class, new TileRendererCompressor());
+	}
+
+	public static IModel getModel(ResourceLocation location) {
+		try {
+			return ModelLoaderRegistry.getModel(location);
+		} catch (Exception e) {
+			PrestonMod.logger.error("Model " + location.toString() + " is missing! THIS WILL CAUSE A CRASH!");
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	public static IModel getModelWithTextures(ResourceLocation location, TextureMap map) {
+		IModel model = getModel(location);
+		if (model != null) {
+			for (ResourceLocation tlocation : model.getTextures()) {
+				map.registerSprite(tlocation);
+			}
+		}
+		return model;
+	}
+
+	@Override
+	public EntityPlayer getPlayer(INetHandler handler) {
+		return (handler instanceof INetHandlerPlayClient || handler instanceof INetHandlerLoginClient)
+				? Minecraft.getMinecraft().player : super.getPlayer(handler);
+	}
+
+	@Override
+	public boolean isCallingFromMinecraftThread() {
+		return Minecraft.getMinecraft().isCallingFromMinecraftThread();
+	}
+
+	@Override
+	public ListenableFuture<Object> addScheduledTask(Runnable runnable) {
+		return Minecraft.getMinecraft().addScheduledTask(runnable);
+	}
+
+	@Override
+	public World getLocalWorld(INetHandler handler, int dim) {
+		if (handler instanceof INetHandlerPlayClient || handler instanceof INetHandlerLoginClient) {
+			World w = getPlayer(handler).world;
+			if (w.provider.getDimension() == dim) {
+				return w;
+			} else {
+				return null;
+			}
+		} else {
+			return super.getLocalWorld(handler, dim);
+		}
+	}
+
+	@SubscribeEvent
+	public void onTextureStitchPre(TextureStitchEvent.Pre event) {
+		if (PrestonMod.blockCompressor != null) {
+			TileRendererCompressor.pistonHead = getModelWithTextures(new ResourceLocation("preston", "block/compressor_piston_head"), event.getMap());
+		}
+	}
+
 	@SubscribeEvent
 	public void onRegisterModels(ModelRegistryEvent event) {
+		if (PrestonMod.itemBlockCompressor != null) {
+			ModelLoader.setCustomModelResourceLocation(PrestonMod.itemBlockCompressor, 0, new ModelResourceLocation("preston:compressor", "inventory"));
+		}
 		ModelLoader.setCustomMeshDefinition(PrestonMod.itemCompressedBlock, stack -> CB_MRL);
 		ModelLoader.registerItemVariants(PrestonMod.itemCompressedBlock, CB_MRL);
 	}

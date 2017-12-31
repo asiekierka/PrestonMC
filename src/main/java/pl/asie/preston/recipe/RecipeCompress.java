@@ -24,11 +24,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.world.World;
 import net.minecraftforge.registries.IForgeRegistryEntry;
-import pl.asie.preston.PrestonUtils;
+import pl.asie.preston.util.PrestonUtils;
 import pl.asie.preston.container.ItemCompressedBlock;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class RecipeCompress extends IForgeRegistryEntry.Impl<IRecipe> implements IRecipe {
 	@Override

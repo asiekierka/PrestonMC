@@ -20,7 +20,7 @@
 package pl.asie.preston.client;
 
 import net.minecraft.item.ItemStack;
-import pl.asie.preston.PrestonUtils;
+import pl.asie.preston.util.PrestonUtils;
 import pl.asie.preston.container.ItemCompressedBlock;
 
 public class CBModelCacheKey {

@@ -1,0 +1,38 @@
+{
+  "conditions": [
+    {
+      "type": "preston:feature_enabled",
+      "feature": "compressor"
+    }
+  ],
+  "type": "forge:ore_shaped",
+  "pattern": [
+    "sps",
+    "grg",
+    "sis"
+  ],
+  "key": {
+    "s": {
+      "type": "forge:ore_dict",
+      "ore": "stone"
+    },
+    "p": {
+      "item": "minecraft:piston"
+    },
+    "g": {
+      "type": "forge:ore_dict",
+      "ore": "blockGlassColorless"
+    },
+    "i": {
+      "type": "forge:ore_dict",
+      "ore": "blockIron"
+    },
+    "r": {
+      "type": "forge:ore_dict",
+      "ore": "dustRedstone"
+    }
+  },
+  "result": {
+    "item": "preston:compressor"
+  }
+}

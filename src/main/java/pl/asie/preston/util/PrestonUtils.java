@@ -17,7 +17,7 @@
  * along with Preston.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.asie.preston;
+package pl.asie.preston.util;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -25,6 +25,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.items.ItemHandlerHelper;
 
 public final class PrestonUtils {
 	private PrestonUtils() {
@@ -45,47 +46,7 @@ public final class PrestonUtils {
 	}
 
 	public static boolean canMerge(ItemStack source, ItemStack target) {
-		return equals(source, target, false, true, true);
-	}
-
-	public static boolean equals(ItemStack source, ItemStack target, boolean matchStackSize, boolean matchDamage, boolean matchNBT) {
-		return equals(source, target, matchStackSize, matchDamage, matchNBT, matchNBT);
-	}
-
-	public static boolean equals(ItemStack source, ItemStack target, boolean matchStackSize, boolean matchDamage, boolean matchNBT, boolean matchCaps) {
-		if (source == target) {
-			return true;
-		} else if (source.isEmpty()) {
-			return target.isEmpty();
-		} else {
-			if (source.getItem() != target.getItem()) {
-				return false;
-			}
-
-			if (matchStackSize && source.getCount() != target.getCount()) {
-				return false;
-			}
-
-			if (matchDamage && source.getItemDamage() != target.getItemDamage()) {
-				return false;
-			}
-
-			if (matchNBT) {
-				if (source.hasTagCompound() != target.hasTagCompound()) {
-					return false;
-				} else if (source.hasTagCompound() && !source.getTagCompound().equals(target.getTagCompound())) {
-					return false;
-				}
-			}
-
-			if (matchCaps) {
-				if (!source.areCapsCompatible(target)) {
-					return false;
-				}
-			}
-
-			return true;
-		}
+		return ItemHandlerHelper.canItemStacksStack(source, target);
 	}
 
 	public static IBlockState getBlockState(ItemStack stack) {

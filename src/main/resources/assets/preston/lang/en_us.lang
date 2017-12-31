@@ -1001,3 +1001,4 @@ preston.tuple.1000=Milluple
 
 item.preston.compressed_block.name=%s Compressed %s
 itemGroup.preston=Preston
+tile.preston.compressor.name=Compressor

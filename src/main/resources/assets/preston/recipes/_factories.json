@@ -1,0 +1,5 @@
+{
+  "conditions": {
+    "feature_enabled": "pl.asie.preston.recipe.ConditionFeatureEnabledFactory"
+  }
+}

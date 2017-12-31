@@ -19,20 +19,52 @@
 
 package pl.asie.preston;
 
+import com.google.common.util.concurrent.ListenableFuture;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.INetHandler;
+import net.minecraft.network.NetHandlerPlayServer;
+import net.minecraft.util.IThreadListener;
 import net.minecraft.util.NonNullList;
+import net.minecraft.world.World;
+import net.minecraftforge.common.DimensionManager;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.relauncher.Side;
 import pl.asie.preston.container.ItemCompressedBlock;
+import pl.asie.preston.machine.ContainerCompressor;
+import pl.asie.preston.machine.TileCompressor;
 
-public class ProxyCommon {
+public class ProxyCommon implements IThreadListener {
 	public void preInit() {
+		GuiHandlerPreston.INSTANCE.register(GuiHandlerPreston.COMPRESSOR, Side.SERVER, (a) -> new ContainerCompressor((TileCompressor) a.getTileEntity(), a.player.inventory));
+	}
 
+	@Override
+	public boolean isCallingFromMinecraftThread() {
+		return FMLCommonHandler.instance().getMinecraftServerInstance().isCallingFromMinecraftThread();
+	}
+
+	@Override
+	public ListenableFuture<Object> addScheduledTask(Runnable runnable) {
+		return FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(runnable);
+	}
+
+	public EntityPlayer getPlayer(INetHandler handler) {
+		return handler instanceof NetHandlerPlayServer ? ((NetHandlerPlayServer) handler).player : null;
+	}
+
+	public World getLocalWorld(INetHandler handler, int dim) {
+		return DimensionManager.getWorld(dim);
 	}
 
 	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
 		for (int i = 1; i <= PrestonMod.MAX_COMPRESSION_LEVELS; i++) {
 			items.add(ItemCompressedBlock.setLevel(new ItemStack(Blocks.COBBLESTONE), i));
 		}
+	}
+
+	public void init() {
 	}
 }

@@ -42,6 +42,10 @@ license {
     exclude '**/*.lang'
     exclude '**/*.info'
     exclude '**/*.mcmeta'
+
+    matching('**/pl/asie/preston/api/**') {
+        header = project.file("docs/licenses/LICENSE-API")
+    }
 }
 
 processResources {

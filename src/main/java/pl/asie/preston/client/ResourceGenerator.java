@@ -36,10 +36,9 @@ import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.common.model.TRSRTransformation;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import pl.asie.preston.PrestonMod;
-import pl.asie.preston.PrestonUtils;
+import pl.asie.preston.util.PrestonUtils;
 
 import javax.annotation.Nullable;
-import javax.vecmath.Vector3f;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Map;
@@ -108,6 +107,7 @@ public class ResourceGenerator {
 			setIconWidth(overlaySettings.size);
 			setIconHeight(overlaySettings.size);
 
+			float pwr = (PrestonMod.MAX_COMPRESSION_LEVELS + 1 - count) * 4.0f / PrestonMod.MAX_COMPRESSION_LEVELS;
 			int[][] pixels = new int[Minecraft.getMinecraft().gameSettings.mipmapLevels + 1][];
 			pixels[0] = new int[overlaySettings.size * overlaySettings.size];
 
@@ -120,7 +120,7 @@ public class ResourceGenerator {
 					int xDist = ix < center ? (center - 1 - ix) : ix - center;
 					int distance = Math.max(xDist, yDist);
 					float distFloat = ((float) distance / (center - 1));
-					distFloat = (float) Math.pow(distFloat, ( PrestonMod.MAX_COMPRESSION_LEVELS + 1 - count) / 5.0f);
+					distFloat = (float) Math.pow(distFloat, pwr);
 
 					int alpha = Math.round(distFloat * 255);
 					pixels[0][iy * overlaySettings.size + ix] = color | (alpha << 24);
