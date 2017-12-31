@@ -1,0 +1,16 @@
+[
+{
+  "modid": "preston",
+  "name": "Preston",
+  "description": "The ultimate in compression algorithms.",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "http://asie.pl/files/minecraft/update/preston.json",
+  "authorList": ["asie"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
