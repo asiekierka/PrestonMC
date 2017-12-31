@@ -31,6 +31,7 @@ import net.minecraft.item.crafting.IRecipe;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -79,6 +80,9 @@ public class PrestonMod {
 
     public static String ENERGY_UNIT_NAME;
     public static int ENERGY_MULTIPLIER;
+
+    public static boolean ENABLE_JEI_CRAFTING_SUPPORT, ENABLE_JEI_COMPRESSOR_SUPPORT;
+
     private static boolean ENABLE_COMPRESSION_BY_RECIPE, ENABLE_DECOMPRESSION_BY_RECIPE, ENABLE_COMPRESSOR, ENABLE_COMPRESSION_BY_COMPRESSOR;
 
     @SidedProxy(clientSide = "pl.asie.preston.ProxyClient", serverSide = "pl.asie.preston.ProxyCommon", modId = MODID)
@@ -134,6 +138,11 @@ public class PrestonMod {
     public void preInit(FMLPreInitializationEvent event) {
         config = new Configuration(event.getSuggestedConfigurationFile());
         logger = LogManager.getLogger();
+
+        if (Loader.isModLoaded("jei")) {
+            ENABLE_JEI_COMPRESSOR_SUPPORT = config.getBoolean("jeiCompressorSupport", "compat", true, "");
+            ENABLE_JEI_CRAFTING_SUPPORT = config.getBoolean("jeiCraftingSupport", "compat", true, "");
+        }
 
         ENERGY_UNIT_NAME = config.getString("energyUnitName", "general", "RF", "The name the mod uses to refer to energy.");
         MAX_COMPRESSION_LEVELS = config.getInt("maxCompressionLevels", "balance", 16, 1, 1000, "The maximum amount of compression levels for each block.");

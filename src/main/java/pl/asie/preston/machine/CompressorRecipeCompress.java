@@ -20,6 +20,7 @@
 package pl.asie.preston.machine;
 
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -94,6 +95,10 @@ public class CompressorRecipeCompress implements ICompressorRecipe {
 		}
 
 		stackListCache = new ArrayList<>();
+
+		// TODO - Apparently JEI needs at least one here...
+		stackListCache.add(new ItemStack(Blocks.STONE));
+
 		/* for (Item i : Item.REGISTRY) {
 			if (i instanceof ItemCompressedBlock) {
 				continue;
