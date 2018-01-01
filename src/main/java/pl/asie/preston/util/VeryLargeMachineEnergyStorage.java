@@ -138,7 +138,7 @@ public class VeryLargeMachineEnergyStorage implements IEnergyStorage, INBTSerial
 	public NBTTagCompound serializeNBT() {
 		NBTTagCompound compound = new NBTTagCompound();
 		serializeBigInt(energy, compound, "energy");
-		serializeBigInt(energy, compound, "maxEnergy");
+		serializeBigInt(getCurrentMaxEnergy(), compound, "maxEnergy");
 		return compound;
 	}
 

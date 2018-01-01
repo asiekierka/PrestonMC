@@ -139,6 +139,17 @@ public class TileCompressor extends TileBase implements ITickable {
 		if (isClient && compound.hasKey("p", Constants.NBT.TAG_ANY_NUMERIC)) {
 			armProgressClient = compound.getInteger("p");
 		}
+
+		if (compound.hasKey("es", Constants.NBT.TAG_ANY_NUMERIC)) {
+			currentSystem = EnergySystem.values()[compound.getInteger("es")];
+		}
+	}
+
+	public NBTTagCompound serializeNBTTooltip() {
+		NBTTagCompound compound = new NBTTagCompound();
+		compound.setByte("es", (byte) currentSystem.ordinal());
+		compound.setTag("energy", storage.serializeNBT());
+		return compound;
 	}
 
 	public NBTTagCompound writeNBTData(NBTTagCompound compound, boolean isClient) {

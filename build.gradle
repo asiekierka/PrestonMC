@@ -45,12 +45,21 @@ repositories {
         name 'IC2'
         url 'http://maven.ic2.player.to'
     }
+    maven {
+        url "http://tehnut.info/maven"
+    }
+    maven {
+        url "http://repo.elytradev.com"
+    }
 }
 
 dependencies {
     deobfCompile "com.mod-buildcraft:buildcraft-api:7.99.13"
     deobfCompile "mezz.jei:jei_1.12.2:4.8.5.138"
     deobfCompile "net.industrial-craft:industrialcraft-2:2.8.35-ex112"
+    deobfCompile "mcp.mobius.waila:Hwyla:1.8.23-B38_1.12"
+    deobfCompile "com.elytradev:mirage:2.0.3-rc3-SNAPSHOT"
+    deobfCompile "com.elytradev:probedataproviderapi:MC1.12_ver1.1.1"
 }
 
 license {
