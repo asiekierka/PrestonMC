@@ -33,7 +33,9 @@ public class VeryLargeMachineEnergyStorage implements IEnergyStorage, INBTSerial
 	private BigInteger energy = BigInteger.ZERO, currentMaxEnergy = BigInteger.ZERO;
 
 	public double getFilledAmount() {
-		return currentMaxEnergy.compareTo(BigInteger.ZERO) == 0 ? 0.0 : ((double) energy.multiply(MAX_INT).divide(getCurrentMaxEnergy()).longValueExact() / Integer.MAX_VALUE);
+		return currentMaxEnergy.compareTo(BigInteger.ZERO) == 0
+		? (energy.compareTo(BigInteger.ZERO) > 0 ? 1.0 : 0.0)
+		: ((double) energy.multiply(MAX_INT).divide(getCurrentMaxEnergy()).longValueExact() / Integer.MAX_VALUE);
 	}
 
 	public BigInteger getCurrentMaxEnergy() {

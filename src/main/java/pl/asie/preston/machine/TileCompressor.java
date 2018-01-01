@@ -288,8 +288,8 @@ public class TileCompressor extends TileBase implements ITickable {
 				if (targetSlot.isEmpty()) {
 					stackHandler.setStackInSlot(9, compressed);
 					pushedIn = true;
-				} else if (PrestonUtils.canMerge(targetSlot, compressed) && targetSlot.getCount() < targetSlot.getMaxStackSize()) {
-					targetSlot.grow(1);
+				} else if (PrestonUtils.canMerge(targetSlot, compressed) && (targetSlot.getCount()+compressed.getCount()) <= targetSlot.getMaxStackSize()) {
+					targetSlot.grow(compressed.getCount());
 					pushedIn = true;
 				}
 
@@ -298,7 +298,7 @@ public class TileCompressor extends TileBase implements ITickable {
 
 					storage.setBigEnergyStored(storage.getBigEnergyStored().subtract(storage.getCurrentMaxEnergy()));
 					// Remove used stacks
-					int toRemove = 9;
+					int toRemove = recipe.getRequiredItemCount();
 					for (int i = 0; i < 9 && toRemove > 0; i++) {
 						ItemStack stack = stackHandler.getStackInSlot(i);
 						if (!stack.isEmpty() && (i == 0 || recipe.canMerge(stack, job))) {

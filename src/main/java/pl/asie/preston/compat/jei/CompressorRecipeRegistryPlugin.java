@@ -31,7 +31,18 @@ import java.util.List;
 public class CompressorRecipeRegistryPlugin implements IRecipeRegistryPlugin {
 	@Override
 	public <V> List<String> getRecipeCategoryUids(IFocus<V> focus) {
-		return Collections.singletonList(CompressorRecipeCategory.UID);
+		if (!(focus.getValue() instanceof ItemStack))
+			return Collections.emptyList();
+
+		ItemStack stack = (ItemStack) focus.getValue();
+
+		for (ICompressorRecipe recipe : PrestonAPI.getCompressorRecipes()) {
+			if (recipe.matchesType(stack) || recipe.matchesOutput(stack)) {
+				return Collections.singletonList(CompressorRecipeCategory.UID);
+			}
+		}
+
+		return Collections.emptyList();
 	}
 
 	@Override
@@ -46,7 +57,7 @@ public class CompressorRecipeRegistryPlugin implements IRecipeRegistryPlugin {
 			List<IRecipeWrapper> wrappers = new ArrayList<>();
 			for (ICompressorRecipe recipe : PrestonAPI.getCompressorRecipes()) {
 				if (recipe.matchesType(stack)) {
-					wrappers.add(new CompressorRecipeWrapper(recipe, stack, null));
+					wrappers.add(new CompressorRecipeWrapper(recipe, null, recipe.getResult(stack)));
 				}
 			}
 			return (List<T>) wrappers;

@@ -51,9 +51,13 @@ repositories {
     maven {
         url "http://repo.elytradev.com"
     }
+    maven {
+        url "http://maven.blamejared.com/"
+    }
 }
 
 dependencies {
+    deobfCompile "CraftTweaker2:CraftTweaker2-MC1120-Main:1.12-4.0.10.310"
     deobfCompile "com.mod-buildcraft:buildcraft-api:7.99.13"
     deobfCompile "mezz.jei:jei_1.12.2:4.8.5.138"
     deobfCompile "net.industrial-craft:industrialcraft-2:2.8.35-ex112"
