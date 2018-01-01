@@ -20,6 +20,7 @@
 package pl.asie.preston.client;
 
 import net.minecraft.item.ItemStack;
+import pl.asie.preston.container.TileCompressedBlock;
 import pl.asie.preston.util.PrestonUtils;
 import pl.asie.preston.container.ItemCompressedBlock;
 
@@ -34,6 +35,10 @@ public class CBModelCacheKey {
 
 	public CBModelCacheKey(ItemStack stack) {
 		this(ItemCompressedBlock.getContained(stack), ItemCompressedBlock.getLevel(stack));
+	}
+
+	public CBModelCacheKey(TileCompressedBlock tile) {
+		this(tile.getContainedStack(), tile.getLevel());
 	}
 
 	@Override

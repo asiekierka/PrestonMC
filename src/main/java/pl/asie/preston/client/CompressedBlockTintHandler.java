@@ -19,15 +19,33 @@
 
 package pl.asie.preston.client;
 
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.color.IBlockColor;
 import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import pl.asie.preston.container.ItemCompressedBlock;
+import pl.asie.preston.container.TileCompressedBlock;
 
-public class CompressedBlockTintHandler implements IItemColor {
+import javax.annotation.Nullable;
+
+public class CompressedBlockTintHandler implements IBlockColor, IItemColor {
 	@Override
 	public int colorMultiplier(ItemStack stack, int tintIndex) {
 		ItemStack contained = ItemCompressedBlock.getContained(stack);
 		return Minecraft.getMinecraft().getItemColors().colorMultiplier(contained, tintIndex);
+	}
+
+	@Override
+	public int colorMultiplier(IBlockState state, @Nullable IBlockAccess world, @Nullable BlockPos pos, int tintIndex) {
+		TileEntity tile = world.getTileEntity(pos);
+		if (tile instanceof TileCompressedBlock) {
+			return Minecraft.getMinecraft().getItemColors().colorMultiplier(((TileCompressedBlock) tile).getContainedStack(), tintIndex);
+		} else {
+			return -1;
+		}
 	}
 }

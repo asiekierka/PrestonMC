@@ -33,8 +33,10 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.model.TRSRTransformation;
+import net.minecraftforge.common.property.IExtendedBlockState;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
+import pl.asie.preston.container.BlockCompressedBlock;
 import pl.asie.preston.container.ItemCompressedBlock;
 
 import javax.annotation.Nullable;
@@ -90,9 +92,15 @@ public class CompressedBlockBakedModel implements IBakedModel {
 	public List<BakedQuad> getQuads(@Nullable IBlockState state, @Nullable EnumFacing side, long rand) {
 		CBModelCacheKey key = null;
 		IBakedModel parentModel = null;
+
 		if (stack != null) {
 			key = new CBModelCacheKey(stack);
 			parentModel = itemModel;
+		} else if (state instanceof IExtendedBlockState) {
+			key = ((IExtendedBlockState) state).getValue(BlockCompressedBlock.MODEL_CACHE_KEY);
+			if (key != null) {
+				parentModel = Minecraft.getMinecraft().getRenderItem().getItemModelWithOverrides(key.stack, null, null);
+			}
 		}
 
 		if (key != null) {
@@ -131,7 +139,7 @@ public class CompressedBlockBakedModel implements IBakedModel {
 
 	@Override
 	public TextureAtlasSprite getParticleTexture() {
-		return ModelLoader.defaultTextureGetter().apply(TextureMap.LOCATION_MISSING_TEXTURE);
+		return ModelLoader.defaultTextureGetter().apply(ResourceGenerator.getLocation(1));
 	}
 
 	@Override

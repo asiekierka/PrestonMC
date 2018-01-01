@@ -47,7 +47,9 @@ import net.minecraftforge.oredict.OreDictionary;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import pl.asie.preston.api.ICompressorRecipe;
+import pl.asie.preston.container.BlockCompressedBlock;
 import pl.asie.preston.container.ItemCompressedBlock;
+import pl.asie.preston.container.TileCompressedBlock;
 import pl.asie.preston.machine.BlockCompressor;
 import pl.asie.preston.machine.CompressorRecipeCompress;
 import pl.asie.preston.machine.ContainerCompressor;
@@ -89,6 +91,7 @@ public class PrestonMod {
     public static ProxyCommon proxy;
     public static PacketRegistry packet;
 
+    public static BlockCompressedBlock blockCompressedBlock;
     public static BlockCompressor blockCompressor;
     public static Item itemBlockCompressor;
 	public static ItemCompressedBlock itemCompressedBlock;
@@ -179,6 +182,7 @@ public class PrestonMod {
         if (ENABLE_COMPRESSOR) {
             GameRegistry.registerTileEntity(TileCompressor.class, "preston:compressor");
         }
+        GameRegistry.registerTileEntity(TileCompressedBlock.class, "preston:compressed_block");
 
         String[] blacklistedItemsList = config.getStringList("itemBlacklist", "balance", new String[0], "Names of items to be blacklisted. IMC can also be used.");
         for (String s : blacklistedItemsList) {
@@ -202,6 +206,8 @@ public class PrestonMod {
         if (ENABLE_COMPRESSOR) {
             event.getRegistry().register(blockCompressor = (BlockCompressor) new BlockCompressor().setRegistryName("preston:compressor"));
         }
+
+        event.getRegistry().register(blockCompressedBlock = (BlockCompressedBlock) new BlockCompressedBlock().setRegistryName("preston:compressed_block"));
     }
 
     @SubscribeEvent
@@ -210,7 +216,7 @@ public class PrestonMod {
             event.getRegistry().register(itemBlockCompressor = new ItemBlock(blockCompressor).setRegistryName("preston:compressor"));
         }
 
-        event.getRegistry().register(itemCompressedBlock = (ItemCompressedBlock) new ItemCompressedBlock().setRegistryName("preston:compressed_block"));
+        event.getRegistry().register(itemCompressedBlock = (ItemCompressedBlock) new ItemCompressedBlock(blockCompressedBlock).setRegistryName("preston:compressed_block"));
     }
 
     @SubscribeEvent

@@ -45,7 +45,7 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TileCompressor extends TileEntity implements ITickable {
+public class TileCompressor extends TileBase implements ITickable {
 	public int armProgressClient;
 	public EnergySystem currentSystem = EnergySystem.FORGE;
 	private final VeryLargeMachineEnergyStorage storage;
@@ -127,10 +127,6 @@ public class TileCompressor extends TileEntity implements ITickable {
 		return stackHandler;
 	}
 
-	public boolean hasDataPacket() {
-		return true;
-	}
-
 	public void readNBTData(NBTTagCompound compound, boolean isClient) {
 		if (compound.hasKey("inv", Constants.NBT.TAG_COMPOUND)) {
 			stackHandler.deserializeNBT(compound.getCompoundTag("inv"));
@@ -146,46 +142,18 @@ public class TileCompressor extends TileEntity implements ITickable {
 	}
 
 	public NBTTagCompound writeNBTData(NBTTagCompound compound, boolean isClient) {
+		if (!isClient) {
+			if (shouldShift) {
+				shiftInv();
+			}
+		}
+
 		compound.setTag("inv", stackHandler.serializeNBT());
 		compound.setTag("energy", storage.serializeNBT());
 		if (isClient) {
 			compound.setInteger("p", armProgressClient);
 		}
 		return compound;
-	}
-
-	@Override
-	public final SPacketUpdateTileEntity getUpdatePacket() {
-		return hasDataPacket() ? new SPacketUpdateTileEntity(getPos(), getBlockMetadata(), writeNBTData(new NBTTagCompound(), true)) : null;
-	}
-
-	@Override
-	public final NBTTagCompound getUpdateTag() {
-		NBTTagCompound compound = super.writeToNBT(new NBTTagCompound());
-		compound = writeNBTData(compound, true);
-		return compound;
-	}
-
-	@Override
-	public final void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
-		if (pkt != null) {
-			readNBTData(pkt.getNbtCompound(), true);
-		}
-	}
-
-	@Override
-	public final void readFromNBT(NBTTagCompound compound) {
-		super.readFromNBT(compound);
-		readNBTData(compound, world != null && world.isRemote);
-	}
-
-	@Override
-	public final NBTTagCompound writeToNBT(NBTTagCompound compound) {
-		compound = super.writeToNBT(compound);
-		if (shouldShift) {
-			shiftInv();
-		}
-		return writeNBTData(compound, false);
 	}
 
 	@Override

@@ -25,6 +25,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -40,7 +41,7 @@ import pl.asie.preston.util.PrestonUtils;
 
 import javax.annotation.Nullable;
 
-public class ItemCompressedBlock extends Item {
+public class ItemCompressedBlock extends ItemBlock {
 	private static class Access implements IBlockAccess {
 		public static final BlockPos ACCESS_POS = BlockPos.ORIGIN;
 		private final IBlockState state;
@@ -91,8 +92,8 @@ public class ItemCompressedBlock extends Item {
 		}
 	}
 
-	public ItemCompressedBlock() {
-		super();
+	public ItemCompressedBlock(Block b) {
+		super(b);
 		setCreativeTab(PrestonMod.CREATIVE_TAB);
 	}
 

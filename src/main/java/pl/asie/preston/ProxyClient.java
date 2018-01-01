@@ -148,6 +148,11 @@ public class ProxyClient extends ProxyCommon {
 	}
 
 	@SubscribeEvent
+	public void onColorHandlerBlockRegiser(ColorHandlerEvent.Block event) {
+		event.getBlockColors().registerBlockColorHandler(new CompressedBlockTintHandler(), PrestonMod.blockCompressedBlock);
+	}
+
+	@SubscribeEvent
 	public void onColorHandlerItemRegiser(ColorHandlerEvent.Item event) {
 		event.getItemColors().registerItemColorHandler(new CompressedBlockTintHandler(), PrestonMod.itemCompressedBlock);
 	}

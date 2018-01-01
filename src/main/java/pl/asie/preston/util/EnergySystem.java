@@ -28,8 +28,8 @@ import java.math.BigInteger;
 import java.util.function.Consumer;
 
 public enum EnergySystem {
-	FORGE(100),
-	MJ(10000000);
+	FORGE(20),
+	MJ(2000000);
 	//EU(25);
 
 	private final int defaultMultiplier;
@@ -85,7 +85,7 @@ public enum EnergySystem {
 		if (system == MJ) {
 			vTranslated = value.divide(BigInteger.valueOf(1000000));
 		}
-		
+
 		return String.format("%s %s", vTranslated, system.getName());
 	}
 

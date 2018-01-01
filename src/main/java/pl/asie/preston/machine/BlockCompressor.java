@@ -39,10 +39,11 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.asie.preston.GuiHandlerPreston;
 import pl.asie.preston.PrestonMod;
+import pl.asie.preston.util.BlockBase;
 
 import javax.annotation.Nullable;
 
-public class BlockCompressor extends Block implements ITileEntityProvider {
+public class BlockCompressor extends BlockBase implements ITileEntityProvider {
 	public static final PropertyDirection FACING = BlockHorizontal.FACING;
 
 	public BlockCompressor() {
