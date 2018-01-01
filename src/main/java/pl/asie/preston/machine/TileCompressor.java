@@ -228,6 +228,7 @@ public class TileCompressor extends TileBase implements ITickable {
 		shouldShift = false;
 	}
 
+
 	public void calcArmProgressClient(boolean canProcess) {
 		int newApc = 0;
 
