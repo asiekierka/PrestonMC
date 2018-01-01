@@ -233,7 +233,10 @@ public class TileCompressor extends TileBase implements ITickable {
 
 		if (canProcess) {
 			if (storage.getCurrentMaxEnergy().compareTo(BigInteger.ZERO) > 0) {
-				newApc = 128 + storage.getBigEnergyStored().multiply(BigInteger.valueOf(127)).divide(storage.getCurrentMaxEnergy()).intValueExact();
+				BigInteger result = storage.getBigEnergyStored().multiply(BigInteger.valueOf(127)).divide(storage.getCurrentMaxEnergy());
+				if (result.compareTo(BigInteger.valueOf(Integer.MAX_VALUE)) <= 0) {
+					newApc = 128 + result.intValueExact();
+				}
 			}
 		}
 
