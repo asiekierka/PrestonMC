@@ -13,7 +13,7 @@ buildscript {
 apply plugin: 'net.minecraftforge.gradle.forge'
 apply plugin: 'net.minecrell.licenser'
 
-version = "0.2.0"
+version = "0.3.0"
 group = "pl.asie.preston" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "Preston"
 
@@ -37,10 +37,20 @@ repositories {
         name 'DVS1 Maven FS'
         url 'http://dvs1.progwml6.com/files/maven'
     }
+    maven {
+        name 'BuildCraft'
+        url 'https://mod-buildcraft.com/maven'
+    }
+    maven {
+        name 'IC2'
+        url 'http://maven.ic2.player.to'
+    }
 }
 
 dependencies {
+    deobfCompile "com.mod-buildcraft:buildcraft-api:7.99.13"
     deobfCompile "mezz.jei:jei_1.12.2:4.8.5.138"
+    deobfCompile "net.industrial-craft:industrialcraft-2:2.8.35-ex112"
 }
 
 license {

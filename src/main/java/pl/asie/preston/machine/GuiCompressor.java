@@ -52,7 +52,7 @@ public class GuiCompressor extends GuiContainerBase {
 
 		if (insideRect(mouseX, mouseY, xCenter + 44 - 1, yCenter + 38 - 1, 88 + 2, 5 + 2)) {
 			this.drawHoveringText(Lists.newArrayList(
-					I18n.translateToLocalFormatted("gui.preston.energy_bar", owner.owner.getStorage().getBigEnergyStored().toString(), owner.owner.getStorage().getCurrentMaxEnergy().toString(), PrestonMod.ENERGY_UNIT_NAME)
+				owner.owner.currentSystem.getMeter(owner.owner.getStorage())
 			), mouseX, mouseY, fontRenderer);
 		}
 	}

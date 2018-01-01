@@ -19,6 +19,8 @@
 
 package pl.asie.preston.machine;
 
+import gnu.trove.map.TIntObjectMap;
+import gnu.trove.map.hash.TIntObjectHashMap;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
@@ -32,6 +34,7 @@ import pl.asie.preston.PrestonMod;
 import pl.asie.preston.api.ICompressorRecipe;
 import pl.asie.preston.container.ItemCompressedBlock;
 import pl.asie.preston.network.PacketEmitParticlesOfHappiness;
+import pl.asie.preston.util.EnergySystem;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -39,6 +42,8 @@ import java.util.Collections;
 import java.util.List;
 
 public class CompressorRecipeCompress implements ICompressorRecipe {
+	private static final TIntObjectMap<BigInteger> compressionCostMap = new TIntObjectHashMap<>();
+
 	@Override
 	public boolean matchesType(ItemStack stack) {
 		return ItemCompressedBlock.canCompress(stack);
@@ -52,9 +57,13 @@ public class CompressorRecipeCompress implements ICompressorRecipe {
 	@Override
 	public BigInteger getEnergyUsage(ItemStack stack) {
 		int targetLevel = ItemCompressedBlock.getLevel(stack) + 1;
-		BigInteger value = BigInteger.valueOf(PrestonMod.ENERGY_MULTIPLIER);
-		for (int j = 2; j <= targetLevel; j++) {
-			value = value.multiply(BigInteger.valueOf(j));
+		BigInteger value = compressionCostMap.get(targetLevel);
+		if (value == null) {
+			value = BigInteger.valueOf(EnergySystem.FORGE.getMultiplier());
+			for (int j = 2; j <= targetLevel; j++) {
+				value = value.multiply(BigInteger.valueOf(j));
+			}
+			compressionCostMap.put(targetLevel, value);
 		}
 		return value;
 	}

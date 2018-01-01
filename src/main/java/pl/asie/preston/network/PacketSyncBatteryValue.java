@@ -22,10 +22,12 @@ package pl.asie.preston.network;
 import net.minecraft.network.INetHandler;
 import net.minecraft.network.PacketBuffer;
 import pl.asie.preston.machine.TileCompressor;
+import pl.asie.preston.util.EnergySystem;
 import pl.asie.preston.util.VeryLargeMachineEnergyStorage;
 
 public class PacketSyncBatteryValue extends PacketTile {
 	private TileCompressor compressor;
+	private EnergySystem currentSystem;
 	private VeryLargeMachineEnergyStorage storage;
 
 	public PacketSyncBatteryValue() {
@@ -40,6 +42,7 @@ public class PacketSyncBatteryValue extends PacketTile {
 	@Override
 	public void readData(INetHandler handler, PacketBuffer buf) {
 		super.readData(handler, buf);
+		this.currentSystem = EnergySystem.values()[buf.readUnsignedByte()];
 		this.storage = new VeryLargeMachineEnergyStorage();
 		storage.deserializePacket(buf);
 	}
@@ -49,6 +52,7 @@ public class PacketSyncBatteryValue extends PacketTile {
 		super.apply(handler);
 		if (tile instanceof TileCompressor) {
 			compressor = (TileCompressor) tile;
+			compressor.currentSystem = this.currentSystem;
 			compressor.getStorage().copy(storage);
 		}
 	}
@@ -56,6 +60,7 @@ public class PacketSyncBatteryValue extends PacketTile {
 	@Override
 	public void writeData(PacketBuffer buf) {
 		super.writeData(buf);
+		buf.writeByte(compressor.currentSystem.ordinal());
 		compressor.getStorage().serializePacket(buf);
 	}
 

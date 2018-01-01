@@ -37,23 +37,45 @@ import pl.asie.preston.api.ICompressorRecipe;
 import pl.asie.preston.container.ItemCompressedBlock;
 import pl.asie.preston.network.PacketEmitParticlesOfHappiness;
 import pl.asie.preston.network.PacketSyncHeadProgress;
-import pl.asie.preston.util.ItemHandlerProxy;
-import pl.asie.preston.util.PrestonUtils;
-import pl.asie.preston.util.VeryLargeMachineEnergyStorage;
+import pl.asie.preston.util.*;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TileCompressor extends TileEntity implements ITickable {
 	public int armProgressClient;
+	public EnergySystem currentSystem = EnergySystem.FORGE;
 	private final VeryLargeMachineEnergyStorage storage;
 	private final ItemStackHandler stackHandler;
 	private final IItemHandler viewTop, viewSide, viewBottom;
+	private final List<EnergyWrapper> wrapperList;
 	private boolean shouldShift;
 
 	public TileCompressor() {
-		this.storage = new VeryLargeMachineEnergyStorage();
+		this.storage = new VeryLargeMachineEnergyStorage() {
+			@Override
+			public int receiveEnergy(int maxReceive, boolean simulate) {
+				int r = super.receiveEnergy(maxReceive, simulate);
+				if (!simulate && r > 0) {
+					setCurrentSystem(EnergySystem.FORGE);
+				}
+				return r;
+			}
+		};
+
+		this.wrapperList = new ArrayList<>();
+		for (EnergySystem system : EnergySystem.values()) {
+			if (system != EnergySystem.FORGE && system.isEnabled() && system.canFunction()) {
+				EnergyWrapper w = system.createWrapper(this::setCurrentSystem, storage);
+				if (w != null) {
+					wrapperList.add(w);
+				}
+			}
+		}
+
 		this.stackHandler = new ItemStackHandler(10) {
 			@Override
 			@Nonnull
@@ -68,6 +90,7 @@ public class TileCompressor extends TileEntity implements ITickable {
 			}
 		};
 
+
 		viewTop = new ItemHandlerProxy(stackHandler, 0, 9, true, false);
 		viewSide = new ItemHandlerProxy(stackHandler, 0, 10, true, true) {
 			@Override
@@ -78,6 +101,10 @@ public class TileCompressor extends TileEntity implements ITickable {
 			}
 		};
 		viewBottom = new ItemHandlerProxy(stackHandler, 9, 1, false, true);
+	}
+
+	private void setCurrentSystem(EnergySystem system) {
+		this.currentSystem = system;
 	}
 
 	public static ICompressorRecipe getMatchingRecipe(ItemStack stack) {
@@ -164,12 +191,24 @@ public class TileCompressor extends TileEntity implements ITickable {
 	@Override
 	@Nullable
 	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
-		return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || capability == CapabilityEnergy.ENERGY || super.hasCapability(capability, facing);
+		for (EnergyWrapper wrapper : wrapperList) {
+			if (wrapper.hasCapability(capability, facing)) {
+				return true;
+			}
+		}
+		return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || (capability == CapabilityEnergy.ENERGY && EnergySystem.FORGE.isEnabled()) || super.hasCapability(capability, facing);
 	}
 
 	@Override
 	@Nullable
 	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
+		for (EnergyWrapper wrapper : wrapperList) {
+			T value = wrapper.getCapability(capability, facing);
+			if (value != null) {
+				return value;
+			}
+		}
+
 		if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
 			if (facing == null) {
 				return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(stackHandler);
@@ -183,7 +222,7 @@ public class TileCompressor extends TileEntity implements ITickable {
 						return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(viewSide);
 				}
 			}
-		} else if (capability == CapabilityEnergy.ENERGY) {
+		} else if (capability == CapabilityEnergy.ENERGY && EnergySystem.FORGE.isEnabled()) {
 			return CapabilityEnergy.ENERGY.cast(storage);
 		} else {
 			return super.getCapability(capability, facing);

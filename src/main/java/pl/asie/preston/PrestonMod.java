@@ -58,6 +58,7 @@ import pl.asie.preston.network.PacketSyncBatteryValue;
 import pl.asie.preston.network.PacketSyncHeadProgress;
 import pl.asie.preston.recipe.RecipeCompress;
 import pl.asie.preston.recipe.RecipeDecompress;
+import pl.asie.preston.util.EnergySystem;
 
 import java.rmi.registry.Registry;
 import java.util.*;
@@ -79,7 +80,6 @@ public class PrestonMod {
     public static Logger logger;
 
     public static String ENERGY_UNIT_NAME;
-    public static int ENERGY_MULTIPLIER;
 
     public static boolean ENABLE_JEI_CRAFTING_SUPPORT, ENABLE_JEI_COMPRESSOR_SUPPORT;
 
@@ -144,13 +144,16 @@ public class PrestonMod {
             ENABLE_JEI_CRAFTING_SUPPORT = config.getBoolean("jeiCraftingSupport", "compat", true, "");
         }
 
-        ENERGY_UNIT_NAME = config.getString("energyUnitName", "general", "RF", "The name the mod uses to refer to energy.");
+        ENERGY_UNIT_NAME = config.getString("energyUnitName", "general", "RF", "The name the mod uses to refer to Forge capability-based energy.");
         MAX_COMPRESSION_LEVELS = config.getInt("maxCompressionLevels", "balance", 16, 1, 1000, "The maximum amount of compression levels for each block.");
         ENABLE_COMPRESSOR = config.getBoolean("enableCompressor", "features", true, "Enable or disable the Compressor machine.");
         ENABLE_COMPRESSION_BY_COMPRESSOR = config.getBoolean("enableCompressionByCompressor", "balance", true, "Whether block compression by the Compressor machine should be enabled.");
         ENABLE_COMPRESSION_BY_RECIPE = config.getBoolean("enableCompressionByRecipe", "balance", false, "Whether block compression by recipe should be enabled.");
         ENABLE_DECOMPRESSION_BY_RECIPE = config.getBoolean("enableDecompressionByRecipe", "balance", true, "Whether block decompression by recipe should be enabled.");
-        ENERGY_MULTIPLIER = config.getInt("compressorBlockCompressionEnergyMultiplier", "balance", 100, 20, Integer.MAX_VALUE, "The energy multiplier for block compression in the compressor.");
+
+        for (EnergySystem system : EnergySystem.values()) {
+            system.updateConfig(config);
+        }
 
         if (config.hasChanged()) {
             config.save();

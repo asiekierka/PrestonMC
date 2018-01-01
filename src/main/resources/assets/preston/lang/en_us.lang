@@ -1003,4 +1003,4 @@ config.preston.title=Preston Configuration
 gui.preston.energy_bar=%s/%s %s
 item.preston.compressed_block.name=%s Compressed %s
 itemGroup.preston=Preston
-tile.preston.compressor.name=Compressor
+tile.preston.compressor.name=Isochoric Compressor

@@ -24,7 +24,10 @@ import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.item.ItemStack;
 import pl.asie.preston.PrestonMod;
 import pl.asie.preston.api.ICompressorRecipe;
+import pl.asie.preston.util.EnergySystem;
 
+import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -42,9 +45,14 @@ public class CompressorRecipeWrapper implements IRecipeWrapper {
 	@Override
 	public List<String> getTooltipStrings(int mouseX, int mouseY) {
 		if (mouseX >= 36 && mouseX < (36+90) && mouseY >= 21 && mouseY < 28) {
-			return Collections.singletonList(
-				String.format("%s %s", recipe.getEnergyUsage(input.get(0)), PrestonMod.ENERGY_UNIT_NAME)
-			);
+			List<String> list = new ArrayList<>();
+			BigInteger value = recipe.getEnergyUsage(input.get(0));
+			for (EnergySystem system : EnergySystem.values()) {
+				if (system.isEnabled() && system.canFunction()) {
+					list.add(system.getTooltipEntry(value, system));
+				}
+			}
+			return list;
 		}
 		return Collections.emptyList();
 	}
