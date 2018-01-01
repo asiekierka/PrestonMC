@@ -19,14 +19,17 @@
 
 package pl.asie.preston.container;
 
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.util.Constants;
 import pl.asie.preston.util.TileBase;
 
 public class TileCompressedBlock extends TileBase {
 	protected ItemStack containedStack = ItemStack.EMPTY;
 	protected int level;
+	private FakeBlockAccess access;
 
 	public ItemStack getDroppedBlock() {
 		return ItemCompressedBlock.setLevel(containedStack, level);
@@ -35,6 +38,17 @@ public class TileCompressedBlock extends TileBase {
 	public void initFromStack(ItemStack stack) {
 		containedStack = ItemCompressedBlock.getContained(stack);
 		level = ItemCompressedBlock.getLevel(stack);
+		access = null;
+
+		IBlockState state = world.getBlockState(pos);
+		world.notifyBlockUpdate(pos, state, state, 3);
+	}
+
+	public IBlockAccess getBlockAccess() {
+		if (access == null) {
+			access = new FakeBlockAccess(getWorld(), getPos(), containedStack);
+		}
+		return access;
 	}
 
 	public ItemStack getContainedStack() {
@@ -54,6 +68,11 @@ public class TileCompressedBlock extends TileBase {
 		}
 
 		level = compound.getInteger("level");
+		access = null;
+
+		if (isClient) {
+			world.markBlockRangeForRenderUpdate(pos, pos);
+		}
 	}
 
 	@Override
