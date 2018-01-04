@@ -60,8 +60,10 @@ public class CompressorRecipeCompress implements ICompressorRecipe {
 		BigInteger value = compressionCostMap.get(targetLevel);
 		if (value == null) {
 			if (targetLevel <= 3) {
-				int v = EnergySystem.FORGE.getMultiplier() >> (3 - targetLevel);
-				if (v < 20) v = 20;
+				int mul = EnergySystem.FORGE.getMultiplier();
+				int minMul = mul > 10 ? 10 : mul;
+				int v = mul >> (3 - targetLevel);
+				if (v < minMul) v = minMul;
 				value = BigInteger.valueOf(v);
 			} else {
 				value = BigInteger.valueOf(PrestonMod.MAX_COMPRESSION_LEVELS);
