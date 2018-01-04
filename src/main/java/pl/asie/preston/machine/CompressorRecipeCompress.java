@@ -51,7 +51,7 @@ public class CompressorRecipeCompress implements ICompressorRecipe {
 
 	@Override
 	public int getRequiredItemCount() {
-		return 9;
+		return PrestonMod.COMPRESSED_BLOCK_AMOUNT;
 	}
 
 	@Override
@@ -59,9 +59,14 @@ public class CompressorRecipeCompress implements ICompressorRecipe {
 		int targetLevel = ItemCompressedBlock.getLevel(stack) + 1;
 		BigInteger value = compressionCostMap.get(targetLevel);
 		if (value == null) {
-			value = BigInteger.valueOf(EnergySystem.FORGE.getMultiplier());
-			for (int j = 2; j <= targetLevel; j++) {
-				value = value.multiply(BigInteger.valueOf(j));
+			if (targetLevel <= 3) {
+				int v = EnergySystem.FORGE.getMultiplier() >> (3 - targetLevel);
+				if (v < 100) v = 100;
+				value = BigInteger.valueOf(v);
+			} else {
+				value = BigInteger.valueOf(PrestonMod.MAX_COMPRESSION_LEVELS);
+				value = value.pow(targetLevel - 3);
+				value = value.multiply(BigInteger.valueOf(EnergySystem.FORGE.getMultiplier()));
 			}
 			compressionCostMap.put(targetLevel, value);
 		}
@@ -89,7 +94,9 @@ public class CompressorRecipeCompress implements ICompressorRecipe {
 
 	@Override
 	public List<ItemStack> getInputsForOutput(ItemStack output) {
-		return Collections.singletonList(ItemCompressedBlock.shiftLevel(output, -1));
+		ItemStack stack = ItemCompressedBlock.shiftLevel(output, -1);
+		stack.setCount(PrestonMod.COMPRESSED_BLOCK_AMOUNT);
+		return Collections.singletonList(stack);
 	}
 
 	private static List<ItemStack> stackListCache;

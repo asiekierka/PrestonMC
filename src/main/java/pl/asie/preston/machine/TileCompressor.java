@@ -268,7 +268,7 @@ public class TileCompressor extends TileBase implements ITickable {
 
 		int availableStacks = job.getCount();
 
-		for (int i = 1; i < 9 && availableStacks < 9; i++) {
+		for (int i = 1; i < 9 && availableStacks < recipe.getRequiredItemCount(); i++) {
 			ItemStack stack = stackHandler.getStackInSlot(i);
 			if (!stack.isEmpty() && recipe.canMerge(stack, job)) {
 				availableStacks += stack.getCount();

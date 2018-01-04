@@ -25,6 +25,7 @@ import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.world.World;
 import net.minecraftforge.common.crafting.IShapedRecipe;
 import net.minecraftforge.registries.IForgeRegistryEntry;
+import pl.asie.preston.PrestonMod;
 import pl.asie.preston.util.PrestonUtils;
 import pl.asie.preston.container.ItemCompressedBlock;
 
@@ -100,11 +101,11 @@ public class RecipeCompress extends IForgeRegistryEntry.Impl<IRecipe> implements
 
 	@Override
 	public int getRecipeWidth() {
-		return 3;
+		return PrestonMod.COMPRESSED_BLOCK_AMOUNT == 4 ? 2 : 3;
 	}
 
 	@Override
 	public int getRecipeHeight() {
-		return 3;
+		return PrestonMod.COMPRESSED_BLOCK_AMOUNT == 4 ? 2 : 3;
 	}
 }

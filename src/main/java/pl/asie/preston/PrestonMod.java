@@ -86,6 +86,7 @@ public class PrestonMod {
     public static String ENERGY_UNIT_NAME;
 
     public static boolean ENABLE_JEI_CRAFTING_SUPPORT, ENABLE_JEI_COMPRESSOR_SUPPORT;
+    public static int COMPRESSED_BLOCK_AMOUNT;
 
     private static boolean ENABLE_COMPRESSION_BY_RECIPE, ENABLE_DECOMPRESSION_BY_RECIPE, ENABLE_COMPRESSOR, ENABLE_COMPRESSION_BY_COMPRESSOR;
 
@@ -155,6 +156,7 @@ public class PrestonMod {
         ENABLE_COMPRESSION_BY_COMPRESSOR = config.getBoolean("enableCompressionByCompressor", "balance", true, "Whether block compression by the Compressor machine should be enabled.");
         ENABLE_COMPRESSION_BY_RECIPE = config.getBoolean("enableCompressionByRecipe", "balance", false, "Whether block compression by recipe should be enabled.");
         ENABLE_DECOMPRESSION_BY_RECIPE = config.getBoolean("enableDecompressionByRecipe", "balance", true, "Whether block decompression by recipe should be enabled.");
+        COMPRESSED_BLOCK_AMOUNT = config.getInt("compressedBlockCount", "balance", 9, 2, 64, "The amount of blocks which comprise one compression level. NOTE: If enableCompressionByRecipe is enabled, this may ONLY be set to 4 or 9! Other values will crash.");
 
         for (EnergySystem system : EnergySystem.values()) {
             system.updateConfig(config);
@@ -162,6 +164,10 @@ public class PrestonMod {
 
         if (config.hasChanged()) {
             config.save();
+        }
+
+        if (ENABLE_COMPRESSION_BY_RECIPE && (COMPRESSED_BLOCK_AMOUNT != 4 && COMPRESSED_BLOCK_AMOUNT != 9)) {
+            throw new RuntimeException("compressedBlockCount set to " + COMPRESSED_BLOCK_AMOUNT + ", if compression by recipe enabled this MUST be 4 or 9!");
         }
 
         if (ENABLE_COMPRESSION_BY_COMPRESSOR) {

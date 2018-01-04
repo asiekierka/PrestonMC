@@ -24,6 +24,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.world.World;
 import net.minecraftforge.registries.IForgeRegistryEntry;
+import pl.asie.preston.PrestonMod;
 import pl.asie.preston.container.ItemCompressedBlock;
 
 public class RecipeDecompress extends IForgeRegistryEntry.Impl<IRecipe> implements IRecipe {
@@ -54,7 +55,7 @@ public class RecipeDecompress extends IForgeRegistryEntry.Impl<IRecipe> implemen
 			ItemStack stack = inv.getStackInRowAndColumn(i % inv.getWidth(), i / inv.getWidth());
 			if (!stack.isEmpty()) {
 				ItemStack stack1 = ItemCompressedBlock.shiftLevel(stack, -1);
-				stack1.setCount(9);
+				stack1.setCount(PrestonMod.COMPRESSED_BLOCK_AMOUNT);
 				return stack1;
 			}
 		}

@@ -49,7 +49,7 @@ public class JEIRecipeDecompressWrapper implements ICraftingRecipeWrapper {
 	public void getIngredients(IIngredients ingredients) {
 		ItemStack result = ItemCompressedBlock.shiftLevel(inputStack, -1);
 		if (result != null) {
-			result.setCount(9);
+			result.setCount(PrestonMod.COMPRESSED_BLOCK_AMOUNT);
 			ingredients.setInputs(ItemStack.class, Collections.singletonList(inputStack));
 			ingredients.setOutput(ItemStack.class, result);
 		}

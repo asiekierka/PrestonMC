@@ -49,7 +49,7 @@ public class CompressorRecipeWrapper implements IRecipeWrapper {
 			BigInteger value = recipe.getEnergyUsage(input.get(0));
 			for (EnergySystem system : EnergySystem.values()) {
 				if (system.isEnabled() && system.canFunction()) {
-					list.add(system.getTooltipEntry(value, system));
+					list.add(system.getTooltipEntry(EnergySystem.translate(value, EnergySystem.FORGE, system)[0], system));
 				}
 			}
 			return list;
