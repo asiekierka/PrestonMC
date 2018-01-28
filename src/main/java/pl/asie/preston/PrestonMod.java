@@ -85,7 +85,7 @@ public class PrestonMod {
 
     public static String ENERGY_UNIT_NAME;
 
-    public static boolean ENABLE_JEI_CRAFTING_SUPPORT, ENABLE_JEI_COMPRESSOR_SUPPORT;
+    public static boolean ENABLE_JEI_CRAFTING_SUPPORT, ENABLE_JEI_COMPRESSOR_SUPPORT, ENABLE_COUNT_IN_TOOLTIPS;
     public static int COMPRESSED_BLOCK_AMOUNT;
 
     private static boolean ENABLE_COMPRESSION_BY_RECIPE, ENABLE_DECOMPRESSION_BY_RECIPE, ENABLE_COMPRESSOR, ENABLE_COMPRESSION_BY_COMPRESSOR;
@@ -150,6 +150,7 @@ public class PrestonMod {
             ENABLE_JEI_CRAFTING_SUPPORT = config.getBoolean("jeiCraftingSupport", "compat", true, "");
         }
 
+        ENABLE_COUNT_IN_TOOLTIPS = config.getBoolean("showCountInTooltips", "general", true, "Should the amount of the original block be shown in tooltips?");
         ENERGY_UNIT_NAME = config.getString("energyUnitName", "general", "RF", "The name the mod uses to refer to Forge capability-based energy.");
         MAX_COMPRESSION_LEVELS = config.getInt("maxCompressionLevels", "balance", 16, 1, 1000, "The maximum amount of compression levels for each block.");
         ENABLE_COMPRESSOR = config.getBoolean("enableCompressor", "features", true, "Enable or disable the Compressor machine.");

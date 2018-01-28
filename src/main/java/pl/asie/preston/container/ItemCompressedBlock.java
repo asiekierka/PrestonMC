@@ -22,16 +22,22 @@ package pl.asie.preston.container;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.translation.I18n;
+import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import pl.asie.preston.PrestonMod;
 import pl.asie.preston.util.PrestonUtils;
 
 import javax.annotation.Nullable;
+import java.math.BigInteger;
+import java.util.List;
 
 public class ItemCompressedBlock extends ItemBlock {
 
@@ -102,6 +108,20 @@ public class ItemCompressedBlock extends ItemBlock {
 			return PrestonUtils.getTagCompound(stack, true).getInteger("level");
 		} else {
 			return 0;
+		}
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag flag) {
+		super.addInformation(stack, world, tooltip, flag);
+		if (PrestonMod.ENABLE_COUNT_IN_TOOLTIPS) {
+			int level = getLevel(stack);
+			if (level > 0) {
+				BigInteger amount = BigInteger.valueOf(PrestonMod.COMPRESSED_BLOCK_AMOUNT);
+				amount = amount.pow(level);
+				tooltip.add(amount + " x " + getContained(stack).getDisplayName());
+			}
 		}
 	}
 

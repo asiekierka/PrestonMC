@@ -36,7 +36,7 @@ class CraftingCompressionRecipeRegistryPlugin implements IRecipeRegistryPlugin {
 
 	@Override
 	public <T extends IRecipeWrapper, V> List<T> getRecipeWrappers(IRecipeCategory<T> recipeCategory, IFocus<V> focus) {
-		if (!(VanillaRecipeCategoryUid.CRAFTING.equals(recipeCategory.getUid()))) {
+		if (!(VanillaRecipeCategoryUid.CRAFTING.equals(recipeCategory.getUid())) || !(focus.getValue() instanceof ItemStack)) {
 			return Collections.emptyList();
 		}
 
