@@ -46,6 +46,19 @@ public class ProxyCommon implements IThreadListener {
 		return FMLCommonHandler.instance().getMinecraftServerInstance().isCallingFromMinecraftThread();
 	}
 
+	public Object startProgressBar(String name, int steps) {
+		PrestonMod.logger.info(name);
+		return null;
+	}
+
+	public void stepProgressBar(Object o, String value) {
+
+	}
+
+	public void stopProgressBar(Object o) {
+
+	}
+
 	@Override
 	public ListenableFuture<Object> addScheduledTask(Runnable runnable) {
 		return FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(runnable);

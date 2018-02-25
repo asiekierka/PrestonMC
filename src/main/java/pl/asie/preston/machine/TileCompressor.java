@@ -19,6 +19,7 @@
 
 package pl.asie.preston.machine;
 
+import buildcraft.api.tiles.IHasWork;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
@@ -29,6 +30,7 @@ import net.minecraft.util.ITickable;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
@@ -53,6 +55,20 @@ public class TileCompressor extends TileBase implements ITickable {
 	private final IItemHandler viewTop, viewSide, viewBottom;
 	private final List<EnergyWrapper> wrapperList;
 	private boolean shouldShift;
+
+	public boolean hasWork() {
+		if (armProgressClient != 0) {
+			return true;
+		}
+
+		if (!world.isRemote) {
+			ItemStack job = stackHandler.getStackInSlot(0);
+			ICompressorRecipe recipe = getMatchingRecipe(job);
+			return recipe != null;
+		}
+
+		return false;
+	}
 
 	public TileCompressor() {
 		this.storage = new VeryLargeMachineEnergyStorage() {

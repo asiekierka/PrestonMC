@@ -13,7 +13,7 @@ buildscript {
 apply plugin: 'net.minecraftforge.gradle.forge'
 apply plugin: 'net.minecrell.licenser'
 
-version = "0.3.2"
+version = "0.3.3"
 group = "pl.asie.preston" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "Preston"
 
@@ -23,10 +23,10 @@ compileJava {
 }
 
 minecraft {
-    version = "1.12.2-14.23.1.2582"
+    version = "1.12.2-14.23.2.2619"
     runDir = "run"
     
-    mappings = "snapshot_20171230"
+    mappings = "snapshot_20180224"
 
     replace '@VERSION@', project.version
     replace '@MC_VERSION@', version
@@ -54,16 +54,21 @@ repositories {
     maven {
         url "http://maven.blamejared.com/"
     }
+    ivy {
+        name 'asie dependency mirror'
+        artifactPattern "http://asie.pl/javadeps/[module]-[revision](-[classifier]).[ext]"
+    }
 }
 
 dependencies {
     deobfCompile "CraftTweaker2:CraftTweaker2-MC1120-Main:1.12-4.0.10.310"
-    deobfCompile "com.mod-buildcraft:buildcraft-api:7.99.13"
+    deobfCompile "com.mod-buildcraft:buildcraft-api:7.99.15"
     deobfCompile "mezz.jei:jei_1.12.2:4.8.5.138"
     deobfCompile "net.industrial-craft:industrialcraft-2:2.8.35-ex112"
     deobfCompile "mcp.mobius.waila:Hwyla:1.8.23-B38_1.12"
     deobfCompile "com.elytradev:mirage:2.0.3-rc3-SNAPSHOT"
     deobfCompile "com.elytradev:probedataproviderapi:MC1.12_ver1.1.1"
+    deobfCompile name: "ProjectE", version: "1.12-PE1.2.0"
 }
 
 license {

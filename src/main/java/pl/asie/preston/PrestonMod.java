@@ -49,6 +49,7 @@ import net.minecraftforge.oredict.OreDictionary;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import pl.asie.preston.api.ICompressorRecipe;
+import pl.asie.preston.compat.buildcraft.CompatBuildCraft;
 import pl.asie.preston.container.BlockCompressedBlock;
 import pl.asie.preston.container.ItemCompressedBlock;
 import pl.asie.preston.container.TileCompressedBlock;
@@ -177,6 +178,8 @@ public class PrestonMod {
 
         MinecraftForge.EVENT_BUS.register(this);
         proxy.preInit();
+
+        MinecraftForge.EVENT_BUS.register(new CompatBuildCraft());
 
         NetworkRegistry.INSTANCE.registerGuiHandler(this, GuiHandlerPreston.INSTANCE);
     }

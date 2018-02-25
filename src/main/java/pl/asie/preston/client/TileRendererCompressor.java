@@ -49,6 +49,10 @@ public class TileRendererCompressor extends TileEntitySpecialRenderer<TileCompre
 		}
 
 		IBlockState state = getWorld().getBlockState(tile.getPos());
+		if (!(state.getBlock() instanceof BlockCompressor)) {
+			return;
+		}
+
 		ItemStack stackProcessed = tile.getStackHandler().getStackInSlot(0);
 
 		GlStateManager.pushMatrix();

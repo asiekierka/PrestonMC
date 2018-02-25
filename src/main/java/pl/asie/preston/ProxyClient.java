@@ -44,6 +44,7 @@ import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraftforge.fml.common.ProgressManager;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.items.ItemHandlerHelper;
@@ -63,6 +64,7 @@ import java.util.List;
 public class ProxyClient extends ProxyCommon {
 	private static final ModelResourceLocation CB_MRL = new ModelResourceLocation("preston:compressed_block", "normal");
 
+	@Override
 	public void preInit() {
 		super.preInit();
 		GuiHandlerPreston.INSTANCE.register(GuiHandlerPreston.COMPRESSOR, Side.CLIENT, (a) -> new GuiCompressor((ContainerCompressor) a.getContainer()));
@@ -70,9 +72,26 @@ public class ProxyClient extends ProxyCommon {
 		MinecraftForge.EVENT_BUS.register(new ResourceGenerator());
 	}
 
+	@Override
 	public void init() {
 		super.init();
 		ClientRegistry.bindTileEntitySpecialRenderer(TileCompressor.class, new TileRendererCompressor());
+	}
+
+	@Override
+	public Object startProgressBar(String name, int steps) {
+		PrestonMod.logger.info(name);
+		return ProgressManager.push(name, steps);
+	}
+
+	@Override
+	public void stepProgressBar(Object o, String value) {
+		((ProgressManager.ProgressBar) o).step(value);
+	}
+
+	@Override
+	public void stopProgressBar(Object o) {
+		ProgressManager.pop((ProgressManager.ProgressBar) o);
 	}
 
 	public static IModel getModel(ResourceLocation location) {
