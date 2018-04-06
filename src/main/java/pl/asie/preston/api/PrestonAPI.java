@@ -27,6 +27,7 @@ import pl.asie.preston.PrestonMod;
 import pl.asie.preston.container.ItemCompressedBlock;
 
 import javax.annotation.Nullable;
+import java.math.BigInteger;
 import java.util.Collections;
 import java.util.List;
 
@@ -48,6 +49,10 @@ public class PrestonAPI {
 
 	public static ItemStack getCompressedStack(ItemStack stack) {
 		return ItemCompressedBlock.getContained(stack);
+	}
+
+	public static BigInteger getCompressedStackBlockCount(ItemStack stack) {
+		return ItemCompressedBlock.getBlockCount(stack);
 	}
 
 	public static ItemStack setCompressionLevel(ItemStack stack, int level) {

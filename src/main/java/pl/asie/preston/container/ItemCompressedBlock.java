@@ -27,6 +27,8 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
@@ -40,10 +42,33 @@ import java.math.BigInteger;
 import java.util.List;
 
 public class ItemCompressedBlock extends ItemBlock {
+	private static final int MAX_BURN_TIME = 32000;
 
 	public ItemCompressedBlock(Block b) {
 		super(b);
 		setCreativeTab(PrestonMod.CREATIVE_TAB);
+	}
+
+	@Override
+	public int getItemBurnTime(ItemStack stack) {
+		ItemStack contained = getContained(stack);
+		int time = TileEntityFurnace.getItemBurnTime(contained);
+		if (time > 0) {
+			NBTTagCompound compound = PrestonUtils.getTagCompound(stack, true);
+			BigInteger fullValue = getBlockCount(stack).multiply(BigInteger.valueOf(time));
+			BigInteger burnedTime = PrestonUtils.readBigInteger(compound, "burnTime");
+			fullValue = fullValue.subtract(burnedTime);
+
+			if (fullValue.compareTo(BigInteger.ZERO) < 1) {
+				return 0;
+			} else if (fullValue.compareTo(BigInteger.valueOf(MAX_BURN_TIME)) < 1) {
+				return fullValue.intValue();
+			} else {
+				return MAX_BURN_TIME;
+			}
+		} else {
+			return 0;
+		}
 	}
 
 	public static boolean canCompress(ItemStack stack) {
@@ -108,6 +133,17 @@ public class ItemCompressedBlock extends ItemBlock {
 			return PrestonUtils.getTagCompound(stack, true).getInteger("level");
 		} else {
 			return 0;
+		}
+	}
+
+	public static BigInteger getBlockCount(ItemStack stack) {
+		int level = getLevel(stack);
+		if (level > 0) {
+			BigInteger amount = BigInteger.valueOf(PrestonMod.COMPRESSED_BLOCK_AMOUNT);
+			amount = amount.pow(level);
+			return amount;
+		} else {
+			return BigInteger.ZERO;
 		}
 	}
 

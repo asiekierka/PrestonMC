@@ -24,12 +24,28 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagByteArray;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.items.ItemHandlerHelper;
+
+import java.math.BigInteger;
 
 public final class PrestonUtils {
 	private PrestonUtils() {
 
+	}
+
+	public static void writeBigInteger(NBTTagCompound compound, String key, BigInteger integer) {
+		compound.setTag(key, new NBTTagByteArray(integer.toByteArray()));
+	}
+
+	public static BigInteger readBigInteger(NBTTagCompound compound, String key) {
+		if (!compound.hasKey(key, Constants.NBT.TAG_BYTE_ARRAY)) {
+			return BigInteger.ZERO;
+		} else {
+			return new BigInteger(compound.getByteArray(key));
+		}
 	}
 
 	public static float clamp(float v, float a, float b) {
