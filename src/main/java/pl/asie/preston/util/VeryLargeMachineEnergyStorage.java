@@ -52,6 +52,7 @@ public class VeryLargeMachineEnergyStorage implements IEnergyStorage, INBTSerial
 	@Override
 	public int receiveEnergy(int maxReceive, boolean simulate) {
 		BigInteger maxEnergyAccept = getCurrentMaxEnergy().subtract(energy);
+		maxEnergyAccept = maxEnergyAccept.compareTo(MAX_INT) > 0 ? MAX_INT : maxEnergyAccept;
 		if (getCurrentMaxEnergy().compareTo(MAX_INT) < 0) {
 			maxReceive = Math.min(maxEnergyAccept.intValueExact(), maxReceive);
 		}
